@@ -8,7 +8,7 @@ public class Main {
             URLConverter urlConverter = new URLConverter();
             urlConverter.scanWebsiteForLinksFixedSize("https://en.wikipedia.org/wiki/History", 45, 10);
             urlConverter.writeNamesOfSitesToFileForPython("testLinksFixedSize");
-            urlConverter.writeReadSitesToFile("testReadFilesFixedSize");
+            GraphvizPythonAdapter.writeReadSitesToFile(urlConverter.getData(), "testReadFilesFixedSize");
 
 
 

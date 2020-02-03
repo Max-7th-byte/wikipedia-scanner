@@ -10,35 +10,34 @@ class URLConverter {
     private HashMap<String, LinkedList<String>> data;
     private Queue<String> links;
 
+    private final static Pattern pattern = Pattern.compile("<a href=\"(/wiki/[a-zA-Z0-9-_:.#()]+)\"(\\s+\\w+=\"[a-zA-Z0-9 ]+\")*>([/a-zA-Z0-9-_ ]+)</a>");
 
     URLConverter() {
         data = new HashMap<>();
         links = new LinkedList<>();
     }
 
-    void scanWebsiteForLinks(String url, int maximumQuantity) {
+    void scanWebsiteForLinks(String url, int maximumQuantity) throws IOException {
 
-        try {
+        links.add(url);
 
-            links.add(url);
+        while (!links.isEmpty()) {
+            LinkedList<String> sites = new LinkedList<>();
+            if (maximumQuantity <= 0) return;
 
-            MAIN_LOOP:
-            while (!links.isEmpty()) {
-                LinkedList<String> sites = new LinkedList<>();
-                if (maximumQuantity <= 0) return;
-
-                for (int i = 0; i < data.keySet().size(); i++) {
-                    if (links.element().equals(data.keySet().toArray()[i])) {
-                        links.remove();
-                        continue MAIN_LOOP;
-                    }
+            boolean found = true;
+            Object[] tmp = data.keySet().toArray();
+            for (int i = 0; i < data.keySet().size(); i++) {
+                if (links.element().equals(tmp[i])) {
+                    links.remove();
+                    found = false;
                 }
-
+            }
+            if (found) {
                 URL link = new URL(links.element());
                 BufferedReader in = new BufferedReader(new InputStreamReader(link.openStream()));
                 String inputLine;
-                String reg_2 = "<a href=\"(/wiki/[a-zA-Z0-9-_:.#()]+)\"(\\s+\\w+=\"[a-zA-Z0-9 ]+\")*>([/a-zA-Z0-9-_ ]+)</a>";
-                Pattern pattern = Pattern.compile(reg_2);
+
 
                 while ((inputLine = in.readLine()) != null) {
                     Matcher matcher = pattern.matcher(inputLine);
@@ -68,10 +67,7 @@ class URLConverter {
                 System.out.println(links.size());
                 links.remove();
                 maximumQuantity--;
-
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -130,36 +126,7 @@ class URLConverter {
         }
     }
 
-    void writeReadSitesToFile(String fileName) {
-        String path = "/Users/max/Desktop/" + fileName + ".txt";
-        File file = new File(path);
-        try {
-            if (file.createNewFile()) {
-                System.out.println("A NEW FILE WITH ALL REFERENCES OF LINKED SITES HAS BEEN CREATED!");
-            } else System.out.println("A FILE WITH ALL REFERENCES OF LINKED SITES IS ALREADY EXIST");
 
-            BufferedWriter bw = new BufferedWriter(new FileWriter(path));
-
-            for (int i = 0; i < data.keySet().size(); i++) {
-
-                String referenceToReadSite = (String)data.keySet().toArray()[i];
-                bw.write((i+1) + ". " + referenceToReadSite + "\n------------------\n\n");
-                Object [] linksOnSite = data.get(referenceToReadSite).toArray();
-                for (int k = 0; k < linksOnSite.length; k++) {
-                    String reference = linksOnSite[k].toString();
-
-                    bw.write(reference + "\n\n");
-                }
-
-
-            }
-            bw.close();
-
-        } catch (Exception e) {
-            System.out.println("SOMETHING WENT WRONG :(");
-            e.printStackTrace();
-        }
-    }
 
     public Map<String, LinkedList<String>> getData() {
         return data;
@@ -172,7 +139,6 @@ class URLConverter {
     void scanWebsiteForLinksFixedSize(String url, int quantityOfSites, int limit) {
 
         try {
-
             links.add(url);
 
             MAIN_LOOP:
