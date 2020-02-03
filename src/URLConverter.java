@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 class URLConverter {
 
-    // with maps and queues
     private HashMap<String, LinkedList<String>> data;
     private Queue<String> links;
 
@@ -28,7 +27,6 @@ class URLConverter {
                 LinkedList<String> sites = new LinkedList<>();
                 if (maximumQuantity <= 0) return;
 
-                // checking if everything is OK and we don't have any doubles
                 for (int i = 0; i < data.keySet().size(); i++) {
                     if (links.element().equals(data.keySet().toArray()[i])) {
                         links.remove();
@@ -36,7 +34,6 @@ class URLConverter {
                     }
                 }
 
-                //reading the source of a site
                 URL link = new URL(links.element());
                 BufferedReader in = new BufferedReader(new InputStreamReader(link.openStream()));
                 String inputLine;
@@ -46,10 +43,8 @@ class URLConverter {
                 while ((inputLine = in.readLine()) != null) {
                     Matcher matcher = pattern.matcher(inputLine);
 
-                    // if there are some links, then..
                     while (matcher.find()) {
 
-                        // adding it to a queue and to a map
                         System.out.println(matcher.group(1) + " ; " + matcher.group(2) + " ; " + matcher.group(3));
                         String foundLink = "https://en.wikipedia.org" + matcher.group(1);
                         boolean linkIsNotInTheList = true;
@@ -185,7 +180,6 @@ class URLConverter {
                 LinkedList<String> sites = new LinkedList<>();
                 if (quantityOfSites <= 0) return;
 
-                // checking if everything is OK and we don't have any doubles
                 for (int i = 0; i < data.keySet().size(); i++) {
                     if (links.element().equals(data.keySet().toArray()[i])) {
                         links.remove();
@@ -193,7 +187,6 @@ class URLConverter {
                     }
                 }
 
-                //reading the source of a site
                 URL link = new URL(links.element());
                 BufferedReader in = new BufferedReader(new InputStreamReader(link.openStream()));
                 String inputLine;
@@ -203,10 +196,8 @@ class URLConverter {
                 while ((inputLine = in.readLine()) != null) {
                     Matcher matcher = pattern.matcher(inputLine);
 
-                    // if there are some links, then..
                     while (matcher.find()) {
 
-                        // adding it to a queue and to a map
                         String foundLink = "https://en.wikipedia.org" + matcher.group(1);
                         boolean linkIsNotInTheList = true;
                         for (int i = 0; i < data.keySet().size(); i++) {
