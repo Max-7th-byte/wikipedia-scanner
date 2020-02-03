@@ -10,7 +10,6 @@ class URLConverter {
     private HashMap<String, LinkedList<String>> data;
     private Queue<String> links;
 
-    private final static Pattern pattern = Pattern.compile("<a href=\"(/wiki/[a-zA-Z0-9-_:.#()]+)\"(\\s+\\w+=\"[a-zA-Z0-9 ]+\")*>([/a-zA-Z0-9-_ ]+)</a>");
 
     URLConverter() {
         data = new HashMap<>();
@@ -20,7 +19,6 @@ class URLConverter {
     void scanWebsiteForLinks(String url, int maximumQuantity) throws IOException {
 
         links.add(url);
-
         while (!links.isEmpty()) {
             LinkedList<String> sites = new LinkedList<>();
             if (maximumQuantity <= 0) return;
@@ -36,32 +34,21 @@ class URLConverter {
             if (found) {
                 URL link = new URL(links.element());
                 BufferedReader in = new BufferedReader(new InputStreamReader(link.openStream()));
-                String inputLine;
-
-
-                while ((inputLine = in.readLine()) != null) {
-                    Matcher matcher = pattern.matcher(inputLine);
-
-                    while (matcher.find()) {
-
-                        System.out.println(matcher.group(1) + " ; " + matcher.group(2) + " ; " + matcher.group(3));
-                        String foundLink = "https://en.wikipedia.org" + matcher.group(1);
-                        boolean linkIsNotInTheList = true;
-                        for (int i = 0; i < data.keySet().size(); i++) {
-                            if (foundLink.equals(data.keySet().toArray()[i])) {
-                                linkIsNotInTheList = false;
-                                break;
-                            }
+                LinkExtractor.process(in, foundLink -> {
+                    System.out.println(foundLink);
+                    String foundUrl = "https://en.wikipedia.org" + foundLink.link;
+                    boolean linkIsNotInTheList = true;
+                    for (int i = 0; i < data.keySet().size() && linkIsNotInTheList; i++) {
+                        if (foundUrl.equals(data.keySet().toArray()[i])) {
+                            linkIsNotInTheList = false;
                         }
-                        if (linkIsNotInTheList) {
-                            links.add(foundLink);
-                        }
-                        sites.add(foundLink);
-                        System.out.println(links.element() + " link to: " + matcher.group(1));
-
                     }
-
-                }
+                    if (linkIsNotInTheList) {
+                        links.add(foundUrl);
+                    }
+                    sites.add(foundUrl);
+                    System.out.println(links.element() + " link to: " + foundLink.link);
+                });
                 in.close();
                 data.put(links.element(), sites);
                 System.out.println(links.size());
