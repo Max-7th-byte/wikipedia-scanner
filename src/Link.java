@@ -6,6 +6,7 @@ public class Link {
         this.innerText = innerText;
     }
 
+
     @Override
     public String toString() {
         return "Link{" +

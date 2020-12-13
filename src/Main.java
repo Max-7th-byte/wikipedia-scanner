@@ -6,11 +6,9 @@ public class Main {
             String readSites = "ReadSites";
 
             URLConverter urlConverter = new URLConverter();
-            urlConverter.scanWebsiteForLinksFixedSize("https://en.wikipedia.org/wiki/History", 45, 10);
+            urlConverter.scanWebsiteForLinks("https://en.wikipedia.org/wiki/Virginia_Polytechnic_Institute_and_State_University", 1);
             urlConverter.writeNamesOfSitesToFileForPython("testLinksFixedSize");
             GraphvizPythonAdapter.writeReadSitesToFile(urlConverter.getData(), "testReadFilesFixedSize");
-
-
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -18,6 +18,10 @@ class URLConverter {
 
     void scanWebsiteForLinks(String url, int maximumQuantity) throws IOException {
 
+
+        // links -- queue
+        // data -- map
+
         links.add(url);
         while (!links.isEmpty()) {
             LinkedList<String> sites = new LinkedList<>();
@@ -124,7 +128,8 @@ class URLConverter {
     }
 
     void scanWebsiteForLinksFixedSize(String url, int quantityOfSites, int limit) {
-
+        // links -- queue
+        // data -- map
         try {
             links.add(url);
 

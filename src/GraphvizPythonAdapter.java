@@ -2,7 +2,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class GraphvizPythonAdapter {
